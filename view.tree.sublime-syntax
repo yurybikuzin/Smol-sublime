@@ -1,0 +1,119 @@
+%YAML 1.2
+---
+name: ViewTree
+file_extensions: [ view.tree ]
+scope: source.tree
+variables:
+  any: '(?=.)'
+
+contexts:
+  illegalInclude:
+    - meta_include_prototype: false
+    - match: .
+      scope: invalid.illegal.tree illegalInclude
+
+  comment:
+    - match: ^\t+
+    - match: '\t'
+      scope: invalid.illegal.tree comment
+    - match: .
+      scope: comment.tree
+
+  lineStartInclude:
+    - match: '\t+'
+      scope: here
+      set:
+        - match: '[ ]+'
+          scope: invalid.illegal.tree lineStartInclude
+          set:
+            - include: lineStartInclude
+            - include: lineItemInclude
+        - include: lineItemInclude
+
+  main:
+    - match: ^(\t*)-([ ]|$)
+      scope: comment.tree
+      embed: comment
+      escape: ^(?!\1\t)
+    - match: (^\$[\w\$][\w\d\$]*)
+      scope: entity.name.class.tree
+      set: spaceOrEnd
+    - match: ' '
+      scope: invalid.illegal.tree main
+    - include: lineStartInclude
+    # - include: illegalInclude
+    - match: .
+      scope: invalid.illegal.tree main2
+
+  spaceOrEnd:
+    - include: spaceOrEndInclude
+    # - include: illegalInclude
+    - match: .
+      scope: invalid.illegal.tree spaceOrEnd
+
+  spaceOrEndInclude:
+    - match: '[ ]+'
+      set: lineItem
+    - match: '$'
+      set: main
+
+  lineItemInclude:
+    - match: (\$[\w\$][\w\d\$]*)
+      scope: support.class.tree
+      set: spaceOrEnd
+    - match: (true|false|null)\b
+      scope: constant.language.tree
+      set: spaceOrEnd
+    - match: \d+(\.\d+)?\b
+      scope: constant.numeric.tree
+      set: spaceOrEnd
+    - match: ([\w\$][-\w\d\$]*)
+      scope: meta.property.object.js
+      set: requiredArgOptional
+    - match: (/|\*|\@|<=>|<=|=>|\^|-)
+      scope: keyword.tree
+      set: spaceOrEnd
+    - include: literalInclude
+    - include: accessorInclude
+    - include: localizationStarterInclude
+
+  lineItem:
+    - include: lineItemInclude
+    # - include: illegalInclude
+    - match: .
+      scope: invalid.illegal.tree lineItem
+
+
+  requiredArgOptional:
+    - match: '(!)([\w]+)'
+      captures:
+        1: keyword.tree
+        2: variable.parameter.tree
+      set: optionalArgOptional
+    - include: optionalArgOptionalInclude
+    - include: spaceOrEndInclude
+    # - include: illegalInclude
+    - match: .
+      scope: invalid.illegal.tree requiredArgOptional
+
+  optionalArgOptionalInclude:
+    - match: '(\?)([\w]+)'
+      captures:
+        1: keyword.tree
+        2: variable.parameter.tree
+      set: spaceOrEnd
+
+  optionalArgOptional:
+    - include: optionalArgOptionalInclude
+    - include: spaceOrEndInclude
+    # - include: illegalInclude
+    - match: .
+      scope: invalid.illegal.tree optionalArgOptional
+
+  literalInclude:
+    - match: (\\)(.*)$
+      scope: string.unquoted.tree
+      set: main
+
+
+
