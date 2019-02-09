@@ -9,7 +9,7 @@
 
 ## Подсветка синтаксиса
 
-[view.tree.sublime-syntax](view.tree.sublime-syntax) - поддержка подсветка синтаксиса
+[view.tree.sublime-syntax](view.tree.sublime-syntax) - поддержка подсветки синтаксиса
 
 [Пример (картинка)](screenshots/example.png)
 
