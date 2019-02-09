@@ -46,7 +46,9 @@
 
 #### Как найти папку `Packages/User ?
 
-В `Sublime 3` надо выбрать пункт меню `Sublime Text/Preferences/Browse Packages...`. Откроется файловый менеджер с текущей папкой `Packages`, содержащей папку `User`. Папка `User` - это и есть искомая папка `Packages/User`
+В `Sublime 3` надо выбрать пункт меню `Sublime Text/Preferences/Browse Packages...`
+
+Откроется файловый менеджер с текущей папкой `Packages`, содержащей папку `User`. Папка `User` - это и есть искомая папка `Packages/User`
 
 #### Как найти пункт меню `Browse Packages...` ?
 
