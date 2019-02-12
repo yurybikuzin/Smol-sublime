@@ -52,10 +52,12 @@ contexts:
       scope: invalid.illegal.tree spaceOrEnd
 
   spaceOrEndInclude:
-    - match: '[ ]+'
-      set: lineItem
-    - match: '$'
+    - match: '[ ]?$'
+      # scope: there
       set: main
+    - match: '[ ]'
+      # scope: here
+      set: lineItem
 
   lineItemInclude:
     - match: (\$[\w\$][\w\d\$]*)
