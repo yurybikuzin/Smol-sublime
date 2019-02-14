@@ -53,28 +53,49 @@ contexts:
 
   spaceOrEndInclude:
     - match: '[ ]?$'
-      # scope: there
       set: main
     - match: '[ ]'
-      # scope: here
       set: lineItem
 
+  expectsIdAfterSpaceOrEnd:
+    - match: '[ ]?$'
+      set: expectsId
+    - match: '[ ]'
+      set: expectsId
+
+  expectsId:
+    - include: idInclude
+    - include: illegalInclude
+    # - match:
+
+  idInclude:
+    - match: ([a-zA-Z_][a-zA-Z_\d\$]*(?!-)(?=\s|$|\?|!))
+      scope: meta.property.object.js idInclude
+      set: requiredArgOptional
+
+  attrNameInclude:
+    - match: ([a-zA-Z_][a-zA-Z_\d-]*)
+      scope: meta.property.object.js attrNameInclude
+      set: spaceOrEnd
+
   lineItemInclude:
-    - match: (\$[\w\$][\w\d\$]*)
-      scope: support.class.tree
+    - match: \d+(\.\d+)?\b
+      scope: constant.numeric.tree
       set: spaceOrEnd
     - match: (true|false|null)\b
       scope: constant.language.tree
       set: spaceOrEnd
-    - match: \d+(\.\d+)?\b
-      scope: constant.numeric.tree
+    - match: (\$[a-zA-Z_\$][a-zA-Z_\d\$]*)
+      scope: support.class.tree
       set: spaceOrEnd
-    - match: ([\w\$][-\w\d\$]*)
-      scope: meta.property.object.js
-      set: requiredArgOptional
-    - match: (/|\*|\@|<=>|<=|=>|\^|-)
+    - include: idInclude
+    - include: attrNameInclude
+    - match: (/|\*|\@|\^|-)
       scope: keyword.tree
       set: spaceOrEnd
+    - match: (<=>|<=|=>)
+      scope: keyword.tree
+      set: expectsIdAfterSpaceOrEnd
     - include: literalInclude
     - include: accessorInclude
     - include: localizationStarterInclude
